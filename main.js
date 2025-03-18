@@ -13,7 +13,7 @@ const secondDisplay = document.querySelector(".seconds .number");
 
 const countdownContainer = document.querySelector(".countdown-container");
 
-const endDate = new Date("April 08 2025 17:00:00");
+const endDate = new Date("March 18 2025 12:50:00");
 let saleEnded = false;
 
 const updateTimer = () => {
