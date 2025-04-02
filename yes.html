@@ -1,23 +1,245 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Ask Her Out</title>
-
-  <link rel="stylesheet" href="./style.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For My Love ❤️</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @keyframes heartFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        .floating-heart {
+            animation: heartFloat 2s infinite ease-in-out;
+        }
+        .gift-box {
+            transition: transform 0.3s;
+            cursor: pointer;
+        }
+        .gift-box:hover {
+            transform: scale(1.05);
+        }
+        .background-hearts {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+        .date-message {
+            font-size: 3rem;
+            color: #ff69b4;
+            text-align: center;
+            margin-top: 20px;
+            display: none;
+            font-family: 'Cursive', sans-serif;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        .plan-button {
+            display: none;
+            font-size: 2rem;
+            color: white;
+            background-color: #ff69b4;
+            padding: 10px 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+        .plan-button:hover {
+            transform: scale(1.1);
+        }
+        .sticker {
+            width: 300px; /* Increased size */
+            height: auto;
+            display: block;
+            margin: 0 auto 2rem; /* Center the image and add bottom margin */
+            transition: transform 0.3s ease;
+        }
+        .sticker:hover {
+            transform: scale(1.1); /* Add a hover effect to make it more attractive */
+        }
+    </style>
 </head>
+<body class="min-h-screen bg-pink-50 flex flex-col items-center justify-center p-4 overflow-hidden">
+    <!-- Background Hearts -->
+    <div class="background-hearts">
+        <div id="hearts-container"></div>
+    </div>
 
-<body>
-  <div class="container">
-    
-    <img src="img/yes.gif" style="
-    background-color: #fff"
-    width="260px">
-    
-      <h1>I knew it! You Love me a lot 😘</h1>
-  </div>
+    <!-- Initial Proposal Page -->
+    <div id="proposal-page" class="text-center">
+        <h1 class="text-4xl font-bold text-pink-600 mb-8"> Socho achche se !! 🙈💝</h1>
+        <!-- Sticker -->
+        <img src="img/cute.jpg" alt="Sticker" class="sticker mb-10">
+        <div class="space-x-4">
+            <button onclick="showThankYouPage()" class="bg-pink-500 hover:bg-pink-600 text-white font-bold py-3 px-8 rounded-full transform hover:scale-110 transition duration-300">
+                Yes 💖
+            </button>
+            <button onclick="moveButton(this)" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-3 px-8 rounded-full absolute transition-all duration-300">
+                No 😢
+            </button>
+        </div>
+    </div>
+
+    <!-- Thank You Page (Initially Hidden) -->
+    <div id="thank-you-page" class="text-center hidden">
+        <h2 class="text-4xl font-bold text-pink-600 mb-8 floating-heart">I knew it You Love Me a lot❤️</h2>
+        
+        <!-- Gift Box -->
+        <div id="gift-box" class="gift-box mb-8" onclick="openGift()">
+            <div class="text-8xl">🎁</div>
+        </div>
+
+        <!-- Kiss Emoji (Initially Hidden) -->
+        <div id="kiss-emoji" class="hidden text-8xl floating-heart mb-8">
+            😘
+        </div>
+
+        <!-- Date Selection (Initially Hidden) -->
+        <div id="date-selection" class="hidden space-y-4">
+            <p class="text-2xl text-pink-600 mb-4">Please Send Your Reply To Me on whatsapp 💑</p>
+            
+            <div>
+                
+            </div>
+        </div>
+
+        <!-- Date Message (Initially Hidden) -->
+        <div id="date-message" class="date-message"></div>
+
+        <!-- Plan Button (Initially Hidden) -->
+        <button id="plan-button" class="plan-button">Let's go for a plan! 🌟</button>
+    </div>
+
+    <script>
+        // Set minimum date to today
+        document.querySelector('input[type="date"]').min = new Date().toISOString().split('T')[0];
+
+        // Create floating hearts background
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.innerHTML = ['❤️', '🌹', '💝', '💖', '💕'][Math.floor(Math.random() * 5)];
+            heart.className = 'absolute text-2xl';
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.top = -30 + 'px';
+            heart.style.opacity = '0.6';
+            heart.style.transform = `scale(${0.5 + Math.random()})`;
+            document.getElementById('hearts-container').appendChild(heart);
+
+            const animation = heart.animate([
+                { transform: `translate(0, 0) rotate(0deg) scale(${0.5 + Math.random()})` },
+                { transform: `translate(${-50 + Math.random() * 100}px, ${window.innerHeight}px) rotate(${Math.random() * 360}deg) scale(${0.5 + Math.random()})` }
+            ], {
+                duration: 4000 + Math.random() * 3000,
+                easing: 'linear'
+            });
+
+            animation.onfinish = () => {
+                heart.remove();
+            };
+        }
+
+        // Create hearts periodically
+        setInterval(createHeart, 300);
+
+        // Move the "No" button when hovered
+        function moveButton(btn) {
+            const x = Math.random() * (window.innerWidth - btn.offsetWidth);
+            const y = Math.random() * (window.innerHeight - btn.offsetHeight);
+            btn.style.transform = `translate(${x}px, ${y}px)`;
+        }
+
+        // Show thank you page
+        function showThankYouPage() {
+            gsap.to("#proposal-page", {
+                opacity: 0,
+                y: -50,
+                duration: 0.5,
+                onComplete: () => {
+                    document.getElementById("proposal-page").style.display = "none";
+                    document.getElementById("thank-you-page").style.display = "block";
+                    gsap.from("#thank-you-page", {
+                        opacity: 0,
+                        y: 50,
+                        duration: 0.5
+                    });
+                }
+            });
+        }
+
+        // Open gift animation
+        function openGift() {
+            const giftBox = document.getElementById("gift-box");
+            const kissEmoji = document.getElementById("kiss-emoji");
+            const dateSelection = document.getElementById("date-selection");
+
+            gsap.to(giftBox, {
+                scale: 1.2,
+                rotation: 720,
+                opacity: 0,
+                duration: 1,
+                onComplete: () => {
+                    giftBox.style.display = "none";
+                    kissEmoji.style.display = "block";
+                    dateSelection.style.display = "block";
+                    
+                    gsap.from(kissEmoji, {
+                        scale: 0,
+                        rotation: -360,
+                        duration: 1
+                    });
+                    
+                    gsap.from(dateSelection, {
+                        opacity: 0,
+                        y: 30,
+                        duration: 0.5,
+                        delay: 0.5
+                    });
+                }
+            });
+        }
+
+        // Confirm date selection
+        function confirmDate() {
+            const selectedDate = document.querySelector('input[type="date"]').value;
+            const dateMessage = document.getElementById('date-message');
+            const planButton = document.getElementById('plan-button');
+            if (selectedDate) {
+                dateMessage.textContent = `Can't wait for our date on ${selectedDate}! 💖`;
+                dateMessage.style.display = 'block';
+                gsap.from(dateMessage, {
+                    opacity: 0,
+                    scale: 0.5,
+                    duration: 0.5
+                });
+                // Show the plan button after the date message
+                planButton.style.display = 'block';
+                gsap.from(planButton, {
+                    opacity: 0,
+                    scale: 0.5,
+                    duration: 0.5,
+                    delay: 0.5
+                });
+            } else {
+                alert('Please select a date first! 🗓️');
+            }
+        }
+
+        // Smooth transition to plan.html
+        document.getElementById('plan-button').addEventListener('click', () => {
+            gsap.to('body', {
+                opacity: 0,
+                duration: 1,
+                onComplete: () => {
+                    window.location.href = 'plan.html';
+                }
+            });
+        });
+    </script>
 </body>
-
 </html>
